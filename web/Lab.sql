@@ -13,7 +13,7 @@ CREATE TABLE usuarios (
     nombre_completo VARCHAR(100) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
-    rol ENUM('ODONTOLOGO', 'ADMIN', 'TECNICO', 'CERAMISTA', 'DELIVERISTA') NOT NULL,
+    rol ENUM('ODONTOLOGO', 'ADMIN', 'TECNICO', 'CERAMISTA', 'DELIVERISTA', 'CLIENTE') NOT NULL,
     telefono VARCHAR(15),
     direccion VARCHAR(200),
     activo BOOLEAN DEFAULT TRUE,
@@ -111,6 +111,30 @@ FROM transiciones_estado t
 INNER JOIN usuarios u ON t.usuario_id = u.id
 WHERE u.rol IN ('TECNICO', 'CERAMISTA')
 GROUP BY u.id, u.nombre_completo, u.rol, DATE(t.fecha_transicion);
+
+
+CREATE TABLE pedido_historial (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_pedido INT NOT NULL,
+    etapa VARCHAR(50) NOT NULL,
+    fecha_hora DATETIME DEFAULT CURRENT_TIMESTAMP,
+    comentario VARCHAR(255),
+    FOREIGN KEY (id_pedido) REFERENCES pedidos(id)
+);
+
+CREATE TABLE pedido_archivos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_pedido INT NOT NULL,
+    nombre_archivo VARCHAR(150),
+    ruta VARCHAR(255),
+    tipo VARCHAR(50),
+    fecha_subida DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_pedido) REFERENCES pedidos(id)
+);
+
+
+
+
 
 -- Datos iniciales
 INSERT INTO usuarios (nombre_completo, email, password, rol, telefono) VALUES

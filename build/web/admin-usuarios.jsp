@@ -168,7 +168,7 @@
         <div class="modal-content">
             <span class="close" onclick="closeModal()">&times;</span>
             <h3>Registrar Nuevo Usuario</h3>
-            <form action="registro-usuario" method="post">
+            <form action="RegistroUsuarioServlet" method="post">
                 <div class="form-group">
                     <label for="nombreCompleto">Nombre Completo: *</label>
                     <input type="text" id="nombreCompleto" name="nombreCompleto" required>

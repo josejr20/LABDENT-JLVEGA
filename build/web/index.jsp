@@ -155,7 +155,8 @@
             <nav class="nav">
                 <a href="index.jsp" class="active">Inicio</a>
                 <a href="#servicios">Servicios</a>
-                <a href=".registrarPedido">Registrar pedido</a>
+                <a href="registroCliente.jsp">Registrar nuevo usuario</a>
+                <a href="registrarPedido.jsp">Registrar pedido</a>
                 <a href="#consulta">Consultar Pedido</a>
                 <a href="#contacto">Contacto</a>
                 <a href="login">Iniciar Sesión</a>
