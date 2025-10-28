@@ -46,7 +46,7 @@
                     <span class="icon">🏠</span>
                     <span>Inicio</span>
                 </a>
-                <a href="mis-pedidos-cliente" class="nav-link">
+                <a href="misPedidos-cliente" class="nav-link">
                     <span class="icon">📋</span>
                     <span>Mis Pedidos</span>
                 </a>
@@ -59,7 +59,7 @@
                     <span class="icon">🏠</span>
                     <span>Dashboard</span>
                 </a>
-                <a href="mis-pedidos" class="nav-link">
+                <a href="misPedidos" class="nav-link">
                     <span class="icon">📋</span>
                     <span>Mis Pedidos</span>
                 </a>

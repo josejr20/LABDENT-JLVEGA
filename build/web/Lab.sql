@@ -13,7 +13,7 @@ CREATE TABLE usuarios (
     nombre_completo VARCHAR(100) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
-    rol ENUM('ODONTOLOGO', 'ADMIN', 'TECNICO', 'CERAMISTA', 'DELIVERISTA') NOT NULL,
+    rol ENUM('ODONTOLOGO', 'ADMIN', 'TECNICO', 'CERAMISTA', 'DELIVERISTA', 'CLIENTE') NOT NULL,
     telefono VARCHAR(15),
     direccion VARCHAR(200),
     activo BOOLEAN DEFAULT TRUE,
@@ -51,6 +51,9 @@ CREATE TABLE pedidos (
     INDEX idx_odontologo (odontologo_id),
     INDEX idx_fecha_ingreso (fecha_ingreso)
 );
+ALTER TABLE pedidos
+ADD COLUMN usuario_id INT NULL AFTER odontologo_id,
+ADD INDEX idx_usuario (usuario_id);
 
 -- Tabla de transiciones de estado (trazabilidad)
 CREATE TABLE transiciones_estado (
@@ -111,6 +114,47 @@ FROM transiciones_estado t
 INNER JOIN usuarios u ON t.usuario_id = u.id
 WHERE u.rol IN ('TECNICO', 'CERAMISTA')
 GROUP BY u.id, u.nombre_completo, u.rol, DATE(t.fecha_transicion);
+
+
+CREATE TABLE pedido_historial (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_pedido INT NOT NULL,
+    etapa VARCHAR(50) NOT NULL,
+    fecha_hora DATETIME DEFAULT CURRENT_TIMESTAMP,
+    comentario VARCHAR(255),
+    FOREIGN KEY (id_pedido) REFERENCES pedidos(id)
+);
+
+CREATE TABLE pedido_archivos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_pedido INT NOT NULL,
+    nombre_archivo VARCHAR(150),
+    ruta VARCHAR(255),
+    tipo VARCHAR(50),
+    fecha_subida DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_pedido) REFERENCES pedidos(id)
+);
+
+-- Tabla para seguimiento de delivery
+CREATE TABLE pedido_delivery (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    pedido_id INT NOT NULL,
+    deliverista_id INT NOT NULL,
+    estado_delivery ENUM('SALIO_EMPRESA', 'EN_CURSO', 'LLEGO_DESTINO', 'PEDIDO_ENTREGADO') NOT NULL,
+    fecha_salida TIMESTAMP NULL,
+    fecha_llegada TIMESTAMP NULL,
+    fecha_entrega TIMESTAMP NULL,
+    observaciones TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (pedido_id) REFERENCES pedidos(id) ON DELETE CASCADE,
+    FOREIGN KEY (deliverista_id) REFERENCES usuarios(id),
+    INDEX idx_pedido (pedido_id),
+    INDEX idx_deliverista (deliverista_id),
+    INDEX idx_estado (estado_delivery)
+);
+
+
 
 -- Datos iniciales
 INSERT INTO usuarios (nombre_completo, email, password, rol, telefono) VALUES

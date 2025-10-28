@@ -51,7 +51,7 @@
                     <span class="icon">🏠</span>
                     <span>Inicio</span>
                 </a>
-                <a href="mis-pedidos.jsp" class="nav-link">
+                <a href="misPedidos.jsp" class="nav-link">
                     <span class="icon">📋</span>
                     <span>Mis Pedidos</span>
                 </a>
@@ -437,7 +437,7 @@
 
 <script>
     function verDetalle(idPedido) {
-        window.location.href = "verPedido?id=" + idPedido;
+        window.location.href = "ver-pedido?id=" + idPedido;
     }
     
     console.log("✅ Kanban cargado - <%= totalPedidos %> pedidos en proceso");

@@ -91,9 +91,11 @@ public class LoginServlet extends HttpServlet {
             case "ODONTOLOGO":
                 response.sendRedirect("misPedidos");
                 break;
+            case "DELIVERISTA":
+                response.sendRedirect("panelDeliverista.jsp");
+                break;
             case "TECNICO":
             case "CERAMISTA":
-            case "DELIVERISTA":
                 response.sendRedirect("kanban");
                 break;
             case "CLIENTE":

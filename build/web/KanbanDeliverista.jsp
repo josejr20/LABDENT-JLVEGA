@@ -4,17 +4,15 @@
 <%@ page import="java.util.List" %>
 <%
     Usuario usuario = (Usuario) session.getAttribute("usuario");
-    if (usuario == null) {
+    if (usuario == null || !"DELIVERISTA".equals(usuario.getRol())) {
         response.sendRedirect("login");
         return;
     }
     
-    // VALIDACIÓN CRÍTICA: Si no hay datos, redirigir al servlet
     List<Pedido> pedidosRecepcion = (List<Pedido>) request.getAttribute("pedidosRecepcion");
     
     if (pedidosRecepcion == null) {
-        System.out.println("⚠️ [JSP] Acceso directo detectado - Redirigiendo al servlet");
-        response.sendRedirect("KanbanUsuarioServlet");
+        response.sendRedirect("KanbanDeliverista");
         return;
     }
     
@@ -35,8 +33,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi Tablero Kanban - LABDENT</title>
-    <link rel="stylesheet" href="css/kanbanUsuario.css">
+    <title>Kanban - Deliverista</title>
+    <link rel="stylesheet" href="css/kanbanDeliverista.css">
 </head>
 <body>
 
@@ -47,29 +45,21 @@
                 <h1>🦷 LABDENT</h1>
             </div>
             <nav class="nav">
-                <a href="PanelUsuario.jsp" class="nav-link">
+                <a href="PanelDeliverista" class="nav-link">
                     <span class="icon">🏠</span>
-                    <span>Inicio</span>
+                    <span>Panel Principal</span>
                 </a>
-                <a href="misPedidos.jsp" class="nav-link">
-                    <span class="icon">📋</span>
-                    <span>Mis Pedidos</span>
-                </a>
-                <a href="registro-pedido.jsp" class="nav-link">
-                    <span class="icon">➕</span>
-                    <span>Nuevo Pedido</span>
-                </a>
-                <a href="KanbanUsuarioServlet" class="nav-link active">
+                <a href="KanbanDeliverista" class="nav-link active">
                     <span class="icon">📊</span>
-                    <span>Kanban</span>
+                    <span>Kanban General</span>
                 </a>
             </nav>
             <div class="user-menu">
                 <div class="user-info">
-                    <span class="user-avatar">👤</span>
+                    <span class="user-avatar">🚚</span>
                     <div class="user-details">
                         <span class="user-name"><%= usuario.getNombreCompleto()%></span>
-                        <span class="user-role">Cliente</span>
+                        <span class="user-role">Deliverista</span>
                     </div>
                 </div>
                 <a href="logout" class="btn-logout">Cerrar Sesión</a>
@@ -81,40 +71,49 @@
 <main class="main-content">
     <div class="container-wide">
         
-        <!-- Breadcrumb y acciones -->
         <div class="page-header">
             <div class="breadcrumb">
-                <a href="PanelUsuario.jsp" class="breadcrumb-link">
-                    <span>🏠</span> Panel Principal
+                <a href="PanelDeliverista" class="breadcrumb-link">
+                    <span>🏠</span> Panel
                 </a>
                 <span class="breadcrumb-separator">›</span>
-                <span class="breadcrumb-current">Tablero Kanban</span>
+                <span class="breadcrumb-current">Kanban General</span>
             </div>
             <div class="page-actions">
                 <button onclick="window.location.reload()" class="btn-icon" title="Actualizar">
                     🔄
                 </button>
-                <a href="PanelUsuario.jsp" class="btn btn-secondary">
+                <a href="PanelDeliverista" class="btn btn-secondary">
                     ← Volver al Panel
                 </a>
             </div>
         </div>
 
-        <!-- Título y resumen -->
         <div class="kanban-header">
             <div class="kanban-title-section">
-                <h1 class="kanban-title">📊 Mi Tablero Kanban</h1>
-                <p class="kanban-subtitle">Seguimiento visual del estado de tus pedidos en tiempo real</p>
+                <h1 class="kanban-title">📊 Kanban General de Producción</h1>
+                <p class="kanban-subtitle">Vista de solo lectura del estado de todos los pedidos en producción</p>
             </div>
             <div class="kanban-stats">
                 <div class="stat-badge stat-badge-blue">
-                    <span class="stat-label">Total de Pedidos</span>
+                    <span class="stat-label">Total en Producción</span>
                     <span class="stat-value"><%= totalPedidos %></span>
+                </div>
+                <div class="stat-badge stat-badge-green">
+                    <span class="stat-label">Listos para Entrega</span>
+                    <span class="stat-value"><%= pedidosListoEntrega.size() %></span>
                 </div>
             </div>
         </div>
 
-        <!-- Tablero Kanban -->
+        <div class="info-banner">
+            <span class="info-icon">ℹ️</span>
+            <div class="info-text">
+                <strong>Modo de Solo Lectura:</strong> Este kanban es solo para visualización. 
+                Los pedidos en "Listo para Entrega" están disponibles para ser tomados desde tu Panel Principal.
+            </div>
+        </div>
+
         <div class="kanban-board">
 
             <!-- RECEPCIÓN -->
@@ -129,12 +128,9 @@
                 <div class="column-body">
                     <% if (!pedidosRecepcion.isEmpty()) { %>
                         <% for (Pedido p : pedidosRecepcion) {%>
-                        <div class="kanban-card <%= p.isAtrasado() ? "card-delayed" : ""%>" onclick="verDetalle(<%= p.getId()%>)">
+                        <div class="kanban-card kanban-card-readonly">
                             <div class="card-header">
                                 <span class="card-code"><%= p.getCodigoUnico()%></span>
-                                <% if (p.isAtrasado()) { %>
-                                <span class="badge badge-danger">⚠️ Atrasado</span>
-                                <% } %>
                             </div>
                             <div class="card-body">
                                 <div class="card-patient">
@@ -157,7 +153,7 @@
                     <% } else { %>
                         <div class="empty-state">
                             <div class="empty-icon">📭</div>
-                            <p>Sin pedidos aquí</p>
+                            <p>Sin pedidos</p>
                         </div>
                     <% }%>
                 </div>
@@ -175,12 +171,9 @@
                 <div class="column-body">
                     <% if (!pedidosParalelizado.isEmpty()) { %>
                         <% for (Pedido p : pedidosParalelizado) {%>
-                        <div class="kanban-card <%= p.isAtrasado() ? "card-delayed" : ""%>" onclick="verDetalle(<%= p.getId()%>)">
+                        <div class="kanban-card kanban-card-readonly">
                             <div class="card-header">
                                 <span class="card-code"><%= p.getCodigoUnico()%></span>
-                                <% if (p.isAtrasado()) { %>
-                                <span class="badge badge-danger">⚠️ Atrasado</span>
-                                <% } %>
                             </div>
                             <div class="card-body">
                                 <div class="card-patient">
@@ -203,7 +196,7 @@
                     <% } else { %>
                         <div class="empty-state">
                             <div class="empty-icon">📭</div>
-                            <p>Sin pedidos aquí</p>
+                            <p>Sin pedidos</p>
                         </div>
                     <% }%>
                 </div>
@@ -221,7 +214,7 @@
                 <div class="column-body">
                     <% if (!pedidosDisenoCad.isEmpty()) { %>
                         <% for (Pedido p : pedidosDisenoCad) {%>
-                        <div class="kanban-card" onclick="verDetalle(<%= p.getId()%>)">
+                        <div class="kanban-card kanban-card-readonly">
                             <div class="card-header">
                                 <span class="card-code"><%= p.getCodigoUnico()%></span>
                             </div>
@@ -246,7 +239,7 @@
                     <% } else { %>
                         <div class="empty-state">
                             <div class="empty-icon">📭</div>
-                            <p>Sin pedidos aquí</p>
+                            <p>Sin pedidos</p>
                         </div>
                     <% }%>
                 </div>
@@ -264,7 +257,7 @@
                 <div class="column-body">
                     <% if (!pedidosProduccionCam.isEmpty()) { %>
                         <% for (Pedido p : pedidosProduccionCam) {%>
-                        <div class="kanban-card" onclick="verDetalle(<%= p.getId()%>)">
+                        <div class="kanban-card kanban-card-readonly">
                             <div class="card-header">
                                 <span class="card-code"><%= p.getCodigoUnico()%></span>
                             </div>
@@ -289,7 +282,7 @@
                     <% } else { %>
                         <div class="empty-state">
                             <div class="empty-icon">📭</div>
-                            <p>Sin pedidos aquí</p>
+                            <p>Sin pedidos</p>
                         </div>
                     <% }%>
                 </div>
@@ -307,7 +300,7 @@
                 <div class="column-body">
                     <% if (!pedidosCeramica.isEmpty()) { %>
                         <% for (Pedido p : pedidosCeramica) {%>
-                        <div class="kanban-card" onclick="verDetalle(<%= p.getId()%>)">
+                        <div class="kanban-card kanban-card-readonly">
                             <div class="card-header">
                                 <span class="card-code"><%= p.getCodigoUnico()%></span>
                             </div>
@@ -332,7 +325,7 @@
                     <% } else { %>
                         <div class="empty-state">
                             <div class="empty-icon">📭</div>
-                            <p>Sin pedidos aquí</p>
+                            <p>Sin pedidos</p>
                         </div>
                     <% }%>
                 </div>
@@ -350,7 +343,7 @@
                 <div class="column-body">
                     <% if (!pedidosControlCalidad.isEmpty()) { %>
                         <% for (Pedido p : pedidosControlCalidad) {%>
-                        <div class="kanban-card" onclick="verDetalle(<%= p.getId()%>)">
+                        <div class="kanban-card kanban-card-readonly">
                             <div class="card-header">
                                 <span class="card-code"><%= p.getCodigoUnico()%></span>
                             </div>
@@ -375,7 +368,7 @@
                     <% } else { %>
                         <div class="empty-state">
                             <div class="empty-icon">📭</div>
-                            <p>Sin pedidos aquí</p>
+                            <p>Sin pedidos</p>
                         </div>
                     <% }%>
                 </div>
@@ -393,7 +386,7 @@
                 <div class="column-body">
                     <% if (!pedidosListoEntrega.isEmpty()) { %>
                         <% for (Pedido p : pedidosListoEntrega) {%>
-                        <div class="kanban-card card-ready" onclick="verDetalle(<%= p.getId()%>)">
+                        <div class="kanban-card card-ready kanban-card-readonly">
                             <div class="card-header">
                                 <span class="card-code"><%= p.getCodigoUnico()%></span>
                                 <span class="badge badge-success">✓ Listo</span>
@@ -414,12 +407,15 @@
                                     <strong>📅</strong> <%= p.getFechaCompromiso()%>
                                 </div>
                             </div>
+                            <div class="card-action">
+                                <span class="card-hint">👉 Disponible en Panel</span>
+                            </div>
                         </div>
                         <% } %>
                     <% } else { %>
                         <div class="empty-state">
                             <div class="empty-icon">📭</div>
-                            <p>Sin pedidos aquí</p>
+                            <p>Sin pedidos</p>
                         </div>
                     <% }%>
                 </div>
@@ -436,11 +432,7 @@
 </footer>
 
 <script>
-    function verDetalle(idPedido) {
-        window.location.href = "ver-pedido?id=" + idPedido;
-    }
-    
-    console.log("✅ Kanban cargado - <%= totalPedidos %> pedidos en proceso");
+    console.log('✅ Kanban Deliverista cargado - <%= totalPedidos %> pedidos en producción');
 </script>
 
 </body>

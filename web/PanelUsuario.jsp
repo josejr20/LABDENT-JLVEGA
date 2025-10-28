@@ -17,82 +17,199 @@
 <html lang="es">
     <head>
         <meta charset="UTF-8">
-        <title>Panel del Usuario</title>
+        <title>Panel del Cliente - LABDENT</title>
         <link rel="stylesheet" href="css/panelUsuario.css">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body>
 
         <header class="header">
-            <div class="header-content">
-                <h2>Hola, <%= nombreUsuario%></h2>
-                <nav class="nav">
-                    <ul>
-                        <li><a href="misPedidos.jsp">Mis pedidos</a></li>
-                        <li><a href="registro-pedido.jsp">Registrar Pedidore</a></li>
-                        <li><a href="kanbanUsuario.jsp">Kanban</a></li>
-                        <a id="logout-btn" href="logout">Cerrar sesión</a>
-                    </ul>
-                </nav>
+            <div class="container">
+                <div class="header-content">
+                    <div class="logo">
+                        <h1>🦷 LABDENT</h1>
+                    </div>
+                    <nav class="nav">
+                        <a href="PanelUsuario.jsp" class="nav-link active">
+                            <span class="icon">🏠</span>
+                            <span>Inicio</span>
+                        </a>
+                        <a href="misPedidos.jsp" class="nav-link">
+                            <span class="icon">📋</span>
+                            <span>Mis Pedidos</span>
+                        </a>
+                        <a href="registro-pedido.jsp" class="nav-link">
+                            <span class="icon">➕</span>
+                            <span>Nuevo Pedido</span>
+                        </a>
+                        <a href="KanbanUsuarioServlet" class="nav-link">
+                            <span class="icon">📊</span>
+                            <span>Kanban</span>
+                        </a>
+                    </nav>
+                    <div class="user-menu">
+                        <div class="user-info">
+                            <span class="user-avatar">👤</span>
+                            <div class="user-details">
+                                <span class="user-name"><%= nombreUsuario%></span>
+                                <span class="user-role">Cliente</span>
+                            </div>
+                        </div>
+                        <a href="logout" class="btn-logout">Cerrar Sesión</a>
+                    </div>
+                </div>
             </div>
         </header>
 
         <main class="main">
+            <div class="container">
+                
+                <!-- Hero Section -->
+                <section class="hero">
+                    <div class="hero-content">
+                        <h2 class="hero-title">¡Bienvenido, <%= nombreUsuario%>! 👋</h2>
+                        <p class="hero-subtitle">Gestiona tus pedidos dentales de forma simple y eficiente</p>
+                    </div>
+                    <div class="hero-actions">
+                        <a href="registro-pedido.jsp" class="btn btn-primary">
+                            <span>➕</span> Nuevo Pedido
+                        </a>
+                        <a href="KanbanUsuarioServlet" class="btn btn-secondary">
+                            <span>📊</span> Ver Kanban
+                        </a>
+                    </div>
+                </section>
 
+                <!-- Cards de Resumen -->
+                <section class="stats-grid">
+                    <div class="stat-card stat-card-blue">
+                        <div class="stat-icon">📦</div>
+                        <div class="stat-info">
+                            <h3 class="stat-title">Pedidos Activos</h3>
+                            <p class="stat-number" id="pedidos-activos">-</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card stat-card-green">
+                        <div class="stat-icon">✅</div>
+                        <div class="stat-info">
+                            <h3 class="stat-title">Completados</h3>
+                            <p class="stat-number" id="pedidos-completados">-</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card stat-card-orange">
+                        <div class="stat-icon">⏱️</div>
+                        <div class="stat-info">
+                            <h3 class="stat-title">En Proceso</h3>
+                            <p class="stat-number" id="pedidos-proceso">-</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card stat-card-purple">
+                        <div class="stat-icon">🎯</div>
+                        <div class="stat-info">
+                            <h3 class="stat-title">Listos</h3>
+                            <p class="stat-number" id="pedidos-listos">-</p>
+                        </div>
+                    </div>
+                </section>
 
+                <!-- Info Panel -->
+                <section class="info-panel">
+                    <div class="info-card">
+                        <div class="info-icon">🔍</div>
+                        <div class="info-content">
+                            <h3>Seguimiento en Tiempo Real</h3>
+                            <p>Monitorea el estado de tus pedidos en cada etapa del proceso productivo</p>
+                        </div>
+                    </div>
+                    
+                    <div class="info-card">
+                        <div class="info-icon">✨</div>
+                        <div class="info-content">
+                            <h3>Calidad Garantizada</h3>
+                            <p>Materiales certificados y control de calidad en cada trabajo</p>
+                        </div>
+                    </div>
+                    
+                    <div class="info-card">
+                        <div class="info-icon">🎯</div>
+                        <div class="info-content">
+                            <h3>Entrega a Tiempo</h3>
+                            <p>Cumplimos con las fechas comprometidas para tus pacientes</p>
+                        </div>
+                    </div>
+                </section>
 
-            <section class="info-panel">
-                <h3>Seguimiento a tu ritmo, con garantía</h3>
-                <p>Controla en tiempo real el estado de tus pedidos.  
-                    Transparencia y calidad en cada proceso.</p>
-            </section>
+                <!-- Carrusel -->
+                <section class="carousel-section">
+                    <div class="carousel">
+                        <div class="carousel-item active">
+                            <h3>🚀 Tecnología de Punta</h3>
+                            <p>Diseño CAD/CAM y fresado de última generación</p>
+                        </div>
+                        <div class="carousel-item">
+                            <h3>🏆 Experiencia Comprobada</h3>
+                            <p>Más de 15 años en el mercado dental</p>
+                        </div>
+                        <div class="carousel-item">
+                            <h3>💎 Materiales Premium</h3>
+                            <p>Zirconia, disilicato de litio y más</p>
+                        </div>
+                    </div>
+                </section>
 
-            <section class="carrusel">
-                <div class="slider">
-                    <div class="slide active">Seguimiento en tiempo real</div>
-                    <div class="slide">Materiales garantizados</div>
-                    <div class="slide">Atención personalizada</div>
-                </div>
-            </section>
-
-
-
+            </div>
         </main>
 
         <footer class="footer">
-            <p>LABDENT © 2025 | Gestión de Clientes</p>
+            <div class="container">
+                <p>&copy; 2025 LABDENT JLVEGA | Laboratorio Dental de Excelencia</p>
+            </div>
         </footer>
 
         <script>
-            let index = 0;
-            const slides = document.querySelectorAll(".slide");
-            setInterval(() => {
-                slides[index].classList.remove("active");
-                index = (index + 1) % slides.length;
-                slides[index].classList.add("active");
-            }, 3500);
-        </script>
-
-        <input type="hidden" id="usuario-id" 
-               value="<%= session.getAttribute("usuarioId")%>" />
-
-        <input type="hidden" id="usuario-nombre" 
-               value="<%= session.getAttribute("usuarioNombre")%>" />
-
-        <script>
-            const usuario = localStorage.getItem("usuarioData");
-            if (!usuario) {
-                console.warn("⚠ Usuario no encontrado en LocalStorage. Restaurando desde sesión.");
-                const usuarioRestaurado = {
-                    id: '<%= session.getAttribute("usuarioId")%>',
-                    nombre: '<%= session.getAttribute("usuarioNombre")%>',
-                    rol: '<%= session.getAttribute("usuarioRol")%>'
-                };
-                localStorage.setItem("usuarioData", JSON.stringify(usuarioRestaurado));
+            // Carrusel
+            let currentSlide = 0;
+            const slides = document.querySelectorAll(".carousel-item");
+            
+            function showSlide(index) {
+                slides.forEach((slide, i) => {
+                    slide.classList.toggle("active", i === index);
+                });
             }
-        </script>
+            
+            setInterval(() => {
+                currentSlide = (currentSlide + 1) % slides.length;
+                showSlide(currentSlide);
+            }, 4000);
 
-        <script src="js/login.js"></script>
+            // Cargar estadísticas
+            const usuarioId = <%= idCliente %>;
+            
+            fetch(`pedido/listarPorUsuario?id=${usuarioId}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status === 'success' && data.data) {
+                        const pedidos = data.data;
+                        const activos = pedidos.filter(p => p.estadoActual !== 'ENTREGADO').length;
+                        const completados = pedidos.filter(p => p.estadoActual === 'ENTREGADO').length;
+                        const proceso = pedidos.filter(p => 
+                            ['PARALELIZADO', 'DISENO_CAD', 'PRODUCCION_CAM', 'CERAMICA'].includes(p.estadoActual)
+                        ).length;
+                        const listos = pedidos.filter(p => 
+                            ['CONTROL_CALIDAD', 'LISTO_ENTREGA'].includes(p.estadoActual)
+                        ).length;
+                        
+                        document.getElementById('pedidos-activos').textContent = activos;
+                        document.getElementById('pedidos-completados').textContent = completados;
+                        document.getElementById('pedidos-proceso').textContent = proceso;
+                        document.getElementById('pedidos-listos').textContent = listos;
+                    }
+                })
+                .catch(err => console.error('Error al cargar estadísticas:', err));
+        </script>
 
     </body>
 </html>

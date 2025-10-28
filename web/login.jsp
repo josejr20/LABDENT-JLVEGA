@@ -64,16 +64,6 @@
                     <p class="help-text">¿Problemas para acceder? Contacte al administrador</p>
                 </div>
 
-                <!-- Usuarios de prueba (solo en desarrollo)
-                <div class="test-users">
-                    <h4>Usuarios de Prueba:</h4>
-                    <ul>
-                        <li><strong>Admin:</strong> admin@labdent.com / admin123</li>
-                        <li><strong>Odontólogo:</strong> cmendoza@gmail.com / pass123</li>
-                        <li><strong>Técnico:</strong> jtecnico@labdent.com / pass123</li>
-                        <li><strong>Ceramista:</strong> mceramista@labdent.com / pass123</li>
-                    </ul>
-                </div> -->
             </div>
         </div>
         <script src="js/login.js"></script>

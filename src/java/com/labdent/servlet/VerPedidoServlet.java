@@ -14,7 +14,7 @@ import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet("/verPedido")
+@WebServlet("/ver-pedido")
 public class VerPedidoServlet extends HttpServlet {
 
     private final PedidoDAO pedidoDAO = new PedidoDAO();

@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.sql.Timestamp;
 
 public class Pedido implements Serializable {
+
     private int id;
     private String codigoUnico;
     private int odontologoId;
@@ -22,7 +23,7 @@ public class Pedido implements Serializable {
     private String observaciones;
     private String archivoAdjunto;
     private Integer responsableActual;
-    
+
     // Datos relacionados
     private String nombreOdontologo;
     private String emailOdontologo;
@@ -37,14 +38,29 @@ public class Pedido implements Serializable {
     }
 
     // Getters y Setters
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
+    public int getId() {
+        return id;
+    }
 
-    public String getCodigoUnico() { return codigoUnico; }
-    public void setCodigoUnico(String codigoUnico) { this.codigoUnico = codigoUnico; }
+    public void setId(int id) {
+        this.id = id;
+    }
 
-    public int getOdontologoId() { return odontologoId; }
-    public void setOdontologoId(int odontologoId) { this.odontologoId = odontologoId; }
+    public String getCodigoUnico() {
+        return codigoUnico;
+    }
+
+    public void setCodigoUnico(String codigoUnico) {
+        this.codigoUnico = codigoUnico;
+    }
+
+    public int getOdontologoId() {
+        return odontologoId;
+    }
+
+    public void setOdontologoId(int odontologoId) {
+        this.odontologoId = odontologoId;
+    }
 
     public int getUsuarioId() {
         return UsuarioId;
@@ -54,95 +70,202 @@ public class Pedido implements Serializable {
         this.UsuarioId = UsuarioId;
     }
 
-    
-    public String getNombrePaciente() { return nombrePaciente; }
-    public void setNombrePaciente(String nombrePaciente) { this.nombrePaciente = nombrePaciente; }
+    public String getNombrePaciente() {
+        return nombrePaciente;
+    }
 
-    public String getPiezasDentales() { return piezasDentales; }
-    public void setPiezasDentales(String piezasDentales) { this.piezasDentales = piezasDentales; }
+    public void setNombrePaciente(String nombrePaciente) {
+        this.nombrePaciente = nombrePaciente;
+    }
 
-    public String getTipoProtesis() { return tipoProtesis; }
-    public void setTipoProtesis(String tipoProtesis) { this.tipoProtesis = tipoProtesis; }
+    public String getPiezasDentales() {
+        return piezasDentales;
+    }
 
-    public String getMaterial() { return material; }
-    public void setMaterial(String material) { this.material = material; }
+    public void setPiezasDentales(String piezasDentales) {
+        this.piezasDentales = piezasDentales;
+    }
 
-    public String getColorShade() { return colorShade; }
-    public void setColorShade(String colorShade) { this.colorShade = colorShade; }
+    public String getTipoProtesis() {
+        return tipoProtesis;
+    }
 
-    public Timestamp getFechaIngreso() { return fechaIngreso; }
-    public void setFechaIngreso(Timestamp fechaIngreso) { this.fechaIngreso = fechaIngreso; }
+    public void setTipoProtesis(String tipoProtesis) {
+        this.tipoProtesis = tipoProtesis;
+    }
 
-    public Date getFechaCompromiso() { return fechaCompromiso; }
-    public void setFechaCompromiso(Date fechaCompromiso) { this.fechaCompromiso = fechaCompromiso; }
+    public String getMaterial() {
+        return material;
+    }
 
-    public Timestamp getFechaEntrega() { return fechaEntrega; }
-    public void setFechaEntrega(Timestamp fechaEntrega) { this.fechaEntrega = fechaEntrega; }
+    public void setMaterial(String material) {
+        this.material = material;
+    }
 
-    public String getEstadoActual() { return estadoActual; }
-    public void setEstadoActual(String estadoActual) { this.estadoActual = estadoActual; }
+    public String getColorShade() {
+        return colorShade;
+    }
 
-    public String getPrioridad() { return prioridad; }
-    public void setPrioridad(String prioridad) { this.prioridad = prioridad; }
+    public void setColorShade(String colorShade) {
+        this.colorShade = colorShade;
+    }
 
-    public String getObservaciones() { return observaciones; }
-    public void setObservaciones(String observaciones) { this.observaciones = observaciones; }
+    public Timestamp getFechaIngreso() {
+        return fechaIngreso;
+    }
 
-    public String getArchivoAdjunto() { return archivoAdjunto; }
-    public void setArchivoAdjunto(String archivoAdjunto) { this.archivoAdjunto = archivoAdjunto; }
+    public void setFechaIngreso(Timestamp fechaIngreso) {
+        this.fechaIngreso = fechaIngreso;
+    }
 
-    public Integer getResponsableActual() { return responsableActual; }
-    public void setResponsableActual(Integer responsableActual) { this.responsableActual = responsableActual; }
+    public Date getFechaCompromiso() {
+        return fechaCompromiso;
+    }
 
-    public String getNombreOdontologo() { return nombreOdontologo; }
-    public void setNombreOdontologo(String nombreOdontologo) { this.nombreOdontologo = nombreOdontologo; }
+    public void setFechaCompromiso(Date fechaCompromiso) {
+        this.fechaCompromiso = fechaCompromiso;
+    }
 
-    public String getEmailOdontologo() { return emailOdontologo; }
-    public void setEmailOdontologo(String emailOdontologo) { this.emailOdontologo = emailOdontologo; }
+    public Timestamp getFechaEntrega() {
+        return fechaEntrega;
+    }
 
-    public String getTelefonoOdontologo() { return telefonoOdontologo; }
-    public void setTelefonoOdontologo(String telefonoOdontologo) { this.telefonoOdontologo = telefonoOdontologo; }
+    public void setFechaEntrega(Timestamp fechaEntrega) {
+        this.fechaEntrega = fechaEntrega;
+    }
 
-    public String getNombreResponsable() { return nombreResponsable; }
-    public void setNombreResponsable(String nombreResponsable) { this.nombreResponsable = nombreResponsable; }
+    public String getEstadoActual() {
+        return estadoActual;
+    }
+
+    public void setEstadoActual(String estadoActual) {
+        this.estadoActual = estadoActual;
+    }
+
+    public String getPrioridad() {
+        return prioridad;
+    }
+
+    public void setPrioridad(String prioridad) {
+        this.prioridad = prioridad;
+    }
+
+    public String getObservaciones() {
+        return observaciones;
+    }
+
+    public void setObservaciones(String observaciones) {
+        this.observaciones = observaciones;
+    }
+
+    public String getArchivoAdjunto() {
+        return archivoAdjunto;
+    }
+
+    public void setArchivoAdjunto(String archivoAdjunto) {
+        this.archivoAdjunto = archivoAdjunto;
+    }
+
+    public Integer getResponsableActual() {
+        return responsableActual;
+    }
+
+    public void setResponsableActual(Integer responsableActual) {
+        this.responsableActual = responsableActual;
+    }
+
+    public String getNombreOdontologo() {
+        return nombreOdontologo;
+    }
+
+    public void setNombreOdontologo(String nombreOdontologo) {
+        this.nombreOdontologo = nombreOdontologo;
+    }
+
+    public String getEmailOdontologo() {
+        return emailOdontologo;
+    }
+
+    public void setEmailOdontologo(String emailOdontologo) {
+        this.emailOdontologo = emailOdontologo;
+    }
+
+    public String getTelefonoOdontologo() {
+        return telefonoOdontologo;
+    }
+
+    public void setTelefonoOdontologo(String telefonoOdontologo) {
+        this.telefonoOdontologo = telefonoOdontologo;
+    }
+
+    public String getNombreResponsable() {
+        return nombreResponsable;
+    }
+
+    public void setNombreResponsable(String nombreResponsable) {
+        this.nombreResponsable = nombreResponsable;
+    }
 
     // Métodos auxiliares
     public String getEstadoDescripcion() {
-        switch(estadoActual) {
-            case "RECEPCION": return "Recepción y Validación";
-            case "PARALELIZADO": return "Paralelizado";
-            case "DISENO_CAD": return "Diseño CAD/CAM";
-            case "PRODUCCION_CAM": return "Producción CAM";
-            case "CERAMICA": return "Aplicación de Cerámica";
-            case "CONTROL_CALIDAD": return "Control de Calidad";
-            case "LISTO_ENTREGA": return "Listo para Entrega";
-            case "ENTREGADO": return "Entregado";
-            default: return estadoActual;
+        switch (estadoActual) {
+            case "RECEPCION":
+                return "Recepción y Validación";
+            case "PARALELIZADO":
+                return "Paralelizado";
+            case "DISENO_CAD":
+                return "Diseño CAD/CAM";
+            case "PRODUCCION_CAM":
+                return "Producción CAM";
+            case "CERAMICA":
+                return "Aplicación de Cerámica";
+            case "CONTROL_CALIDAD":
+                return "Control de Calidad";
+            case "LISTO_ENTREGA":
+                return "Listo para Entrega";
+            case "ENTREGADO":
+                return "Entregado";
+            default:
+                return estadoActual;
         }
     }
 
     public String getColorEstado() {
-        switch(estadoActual) {
-            case "RECEPCION": return "#3498db";
-            case "PARALELIZADO": return "#9b59b6";
-            case "DISENO_CAD": return "#1abc9c";
-            case "PRODUCCION_CAM": return "#f39c12";
-            case "CERAMICA": return "#e74c3c";
-            case "CONTROL_CALIDAD": return "#16a085";
-            case "LISTO_ENTREGA": return "#27ae60";
-            case "ENTREGADO": return "#2ecc71";
-            default: return "#95a5a6";
+        switch (estadoActual) {
+            case "RECEPCION":
+                return "#3498db";
+            case "PARALELIZADO":
+                return "#9b59b6";
+            case "DISENO_CAD":
+                return "#1abc9c";
+            case "PRODUCCION_CAM":
+                return "#f39c12";
+            case "CERAMICA":
+                return "#e74c3c";
+            case "CONTROL_CALIDAD":
+                return "#16a085";
+            case "LISTO_ENTREGA":
+                return "#27ae60";
+            case "ENTREGADO":
+                return "#2ecc71";
+            default:
+                return "#95a5a6";
         }
     }
 
     public boolean isAtrasado() {
-        if (fechaCompromiso == null || "ENTREGADO".equals(estadoActual)) return false;
+        if (fechaCompromiso == null || "ENTREGADO".equals(estadoActual)) {
+            return false;
+        }
         return new java.util.Date().after(fechaCompromiso);
     }
 
     public int getDiasRestantes() {
-        if (fechaCompromiso == null) return 0;
-        long diff = fechaCompromiso.getTime() - System.currentTimeMillis();
-        return (int) (diff / (1000 * 60 * 60 * 24));
+        if (fechaCompromiso == null || "ENTREGADO".equals(estadoActual)) {
+            return 0;
+        }
+        java.util.Date hoy = new java.util.Date();
+        long diferencia = fechaCompromiso.getTime() - hoy.getTime();
+        return (int) (diferencia / (1000 * 60 * 60 * 24));
     }
 }
