@@ -61,6 +61,7 @@ public class LoginServlet extends HttpServlet {
             session.setAttribute("usuarioId", usuario.getId());
             session.setAttribute("usuarioNombre", usuario.getNombreCompleto());
             session.setAttribute("usuarioRol", usuario.getRol());
+            System.out.println("✅ Sesión creada - Usuario ID: " + usuario.getId());
             session.setMaxInactiveInterval(1800); // 30 minutos
 
             // Cookie para recordar (opcional)

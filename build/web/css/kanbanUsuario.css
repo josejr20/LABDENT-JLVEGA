@@ -508,7 +508,11 @@ body {
     color: white;
     text-align: center;
     padding: 20px 0;
-    margin-top: 50px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 100; 
 }
 
 /* SCROLLBAR CUSTOM */

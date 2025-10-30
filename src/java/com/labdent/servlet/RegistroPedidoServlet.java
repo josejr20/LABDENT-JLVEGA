@@ -5,6 +5,7 @@ import com.labdent.dao.TransicionDAO;
 import com.labdent.model.Pedido;
 import com.labdent.model.TransicionEstado;
 import com.labdent.model.Usuario;
+import com.labdent.util.DatabaseConnection;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
@@ -16,11 +17,15 @@ import jakarta.servlet.http.Part;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Date;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 @WebServlet("/registro-pedido")
 @MultipartConfig(fileSizeThreshold = 1024 * 1024 * 2, // 2MB
-                 maxFileSize = 1024 * 1024 * 10,      // 10MB
-                 maxRequestSize = 1024 * 1024 * 50)   // 50MB
+        maxFileSize = 1024 * 1024 * 10, // 10MB
+        maxRequestSize = 1024 * 1024 * 50)   // 50MB
 public class RegistroPedidoServlet extends HttpServlet {
 
     private PedidoDAO pedidoDAO;
@@ -35,7 +40,7 @@ public class RegistroPedidoServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("usuario") == null) {
             response.sendRedirect("login");
@@ -48,7 +53,7 @@ public class RegistroPedidoServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("usuario") == null) {
             response.sendRedirect("login");
@@ -58,19 +63,27 @@ public class RegistroPedidoServlet extends HttpServlet {
         Usuario usuario = (Usuario) session.getAttribute("usuario");
 
         try {
-            // Crear objeto Pedido
+            // --- Crear objeto Pedido ---
             Pedido pedido = new Pedido();
-            pedido.setOdontologoId(usuario.getId());
+
+            // ✅ ID del cliente logueado
+            pedido.setUsuarioId(usuario.getId());
+
+            // 🔄 Asignar odontólogo aleatorio
+            int odontologoId = obtenerOdontologoAleatorio();
+            if (odontologoId == -1) {
+                throw new Exception("No hay odontólogos registrados en el sistema.");
+            }
+            pedido.setOdontologoId(odontologoId);
             pedido.setNombrePaciente(request.getParameter("nombrePaciente"));
             pedido.setPiezasDentales(request.getParameter("piezasDentales"));
             pedido.setTipoProtesis(request.getParameter("tipoProtesis"));
             pedido.setMaterial(request.getParameter("material"));
             pedido.setColorShade(request.getParameter("colorShade"));
             pedido.setFechaCompromiso(Date.valueOf(request.getParameter("fechaCompromiso")));
-            
+
             String prioridad = request.getParameter("prioridad");
             pedido.setPrioridad(prioridad != null ? prioridad : "NORMAL");
-            
             pedido.setObservaciones(request.getParameter("observaciones"));
 
             // Manejo de archivo adjunto
@@ -79,8 +92,10 @@ public class RegistroPedidoServlet extends HttpServlet {
                 String fileName = extractFileName(filePart);
                 String uploadPath = getServletContext().getRealPath("") + File.separator + "uploads";
                 File uploadDir = new File(uploadPath);
-                if (!uploadDir.exists()) uploadDir.mkdir();
-                
+                if (!uploadDir.exists()) {
+                    uploadDir.mkdir();
+                }
+
                 String filePath = uploadPath + File.separator + System.currentTimeMillis() + "_" + fileName;
                 filePart.write(filePath);
                 pedido.setArchivoAdjunto(fileName);
@@ -101,8 +116,8 @@ public class RegistroPedidoServlet extends HttpServlet {
                 // Mensaje de éxito
                 request.setAttribute("success", "Pedido registrado exitosamente");
                 request.setAttribute("codigoPedido", pedido.getCodigoUnico());
-                request.setAttribute("mensaje", "Su código de seguimiento es: " + pedido.getCodigoUnico() + 
-                                               ". Guárdelo para consultar el estado de su pedido.");
+                request.setAttribute("mensaje", "Su código de seguimiento es: " + pedido.getCodigoUnico()
+                        + ". Guárdelo para consultar el estado de su pedido.");
                 request.getRequestDispatcher("/registro-pedido.jsp").forward(request, response);
             } else {
                 request.setAttribute("error", "Error al registrar el pedido. Intente nuevamente.");
@@ -115,6 +130,31 @@ public class RegistroPedidoServlet extends HttpServlet {
             request.getRequestDispatcher("/registro-pedido.jsp").forward(request, response);
         }
     }
+
+    private int obtenerOdontologoAleatorio() {
+    String sql = "SELECT id FROM usuarios WHERE rol = 'ODONTOLOGO' ORDER BY RAND() LIMIT 1";
+
+    try (Connection conn = DatabaseConnection.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(sql);
+         ResultSet rs = stmt.executeQuery()) {
+
+        if (rs.next()) {
+            return rs.getInt("id");
+        } else {
+            System.err.println("⚠️ No hay odontólogos registrados en la base de datos.");
+            return -1;
+        }
+
+    } catch (SQLException e) {
+        System.err.println("❌ Error SQL al obtener odontólogo aleatorio: " + e.getMessage());
+        e.printStackTrace();
+        return -1;
+    } catch (Exception e) {
+        System.err.println("❌ Error general al obtener odontólogo aleatorio: " + e.getMessage());
+        e.printStackTrace();
+        return -1;
+    }
+}
 
     private String extractFileName(Part part) {
         String contentDisp = part.getHeader("content-disposition");

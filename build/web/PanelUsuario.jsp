@@ -30,7 +30,7 @@
                         <h1>🦷 LABDENT</h1>
                     </div>
                     <nav class="nav">
-                        <a href="PanelUsuario.jsp" class="nav-link active">
+                        <a href="panelUsuario.jsp" class="nav-link active">
                             <span class="icon">🏠</span>
                             <span>Inicio</span>
                         </a>

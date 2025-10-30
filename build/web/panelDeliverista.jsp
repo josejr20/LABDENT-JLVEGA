@@ -43,7 +43,7 @@
                     <span class="icon">🏠</span>
                     <span>Panel Principal</span>
                 </a>
-                <a href="KanbanDeliverista" class="nav-link">
+                <a href="kanbanDeliverista" class="nav-link">
                     <span class="icon">📊</span>
                     <span>Kanban General</span>
                 </a>
@@ -75,7 +75,7 @@
                 <button onclick="window.location.reload()" class="btn btn-primary">
                     <span>🔄</span> Actualizar
                 </button>
-                <a href="KanbanDeliverista" class="btn btn-secondary">
+                <a href="kanbanDeliverista" class="btn btn-secondary">
                     <span>📊</span> Ver Kanban
                 </a>
             </div>

@@ -9,7 +9,7 @@ public class Pedido implements Serializable {
     private int id;
     private String codigoUnico;
     private int odontologoId;
-    private int UsuarioId;
+    private int usuarioId; 
     private String nombrePaciente;
     private String piezasDentales;
     private String tipoProtesis;
@@ -63,11 +63,11 @@ public class Pedido implements Serializable {
     }
 
     public int getUsuarioId() {
-        return UsuarioId;
+        return usuarioId;
     }
 
-    public void setUsuarioId(int UsuarioId) {
-        this.UsuarioId = UsuarioId;
+    public void setUsuarioId(int usuarioId) {
+        this.usuarioId = usuarioId;
     }
 
     public String getNombrePaciente() {

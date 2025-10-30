@@ -12,9 +12,9 @@ public class PedidoDAO {
         String sql = "INSERT INTO pedidos "
                 + "(codigo_unico, odontologo_id, usuario_id, "
                 + "nombre_paciente, piezas_dentales, tipo_protesis, "
-                + "material, color_shade, fecha_compromiso, prioridad, "
+                + "material, color_shade, fecha_compromiso, estado_actual, prioridad, "
                 + "observaciones, archivo_adjunto, responsable_actual) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DatabaseConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
@@ -36,12 +36,12 @@ public class PedidoDAO {
             stmt.setString(11, pedido.getPrioridad());
             stmt.setString(12, pedido.getObservaciones());
             stmt.setString(13, pedido.getArchivoAdjunto());
-            stmt.setObject(14, pedido.getResponsableActual(), Types.INTEGER);
-
+            //stmt.setObject(14, pedido.getResponsableActual(), Types.INTEGER);
+            
             if (pedido.getResponsableActual() != null) {
-                stmt.setInt(13, pedido.getResponsableActual());
+                stmt.setInt(14, pedido.getResponsableActual());
             } else {
-                stmt.setNull(13, Types.INTEGER);
+                stmt.setNull(14, Types.INTEGER);
             }
 
             int filas = stmt.executeUpdate();
@@ -172,30 +172,29 @@ public class PedidoDAO {
     }
 
     public List<Pedido> obtenerPedidosPorCliente(int usuarioId) {
-    List<Pedido> listaPedidos = new ArrayList<>();
-    String sql = "SELECT p.*, u.nombre_completo as nombre_odontologo, u.email as email_odontologo, "
-            + "u.telefono as telefono_odontologo, r.nombre_completo as nombre_responsable "
-            + "FROM pedidos p "
-            + "LEFT JOIN usuarios u ON p.odontologo_id = u.id "
-            + "LEFT JOIN usuarios r ON p.responsable_actual = r.id "
-            + "WHERE p.usuario_id = ? "
-            + "ORDER BY p.fecha_ingreso ASC";
+        List<Pedido> listaPedidos = new ArrayList<>();
+        String sql = "SELECT p.*, u.nombre_completo as nombre_odontologo, u.email as email_odontologo, "
+                + "u.telefono as telefono_odontologo, r.nombre_completo as nombre_responsable "
+                + "FROM pedidos p "
+                + "LEFT JOIN usuarios u ON p.odontologo_id = u.id "
+                + "LEFT JOIN usuarios r ON p.responsable_actual = r.id "
+                + "WHERE p.usuario_id = ? "
+                + "ORDER BY p.fecha_ingreso ASC";
 
-    try (Connection conn = DatabaseConnection.getConnection(); 
-         PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DatabaseConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-        stmt.setInt(1, usuarioId);
-        ResultSet rs = stmt.executeQuery();
+            stmt.setInt(1, usuarioId);
+            ResultSet rs = stmt.executeQuery();
 
-        while (rs.next()) {
-            Pedido pedido = mapearPedido(rs);
-            listaPedidos.add(pedido);
+            while (rs.next()) {
+                Pedido pedido = mapearPedido(rs);
+                listaPedidos.add(pedido);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al obtener pedidos por cliente", e);
         }
-    } catch (SQLException e) {
-        throw new RuntimeException("Error al obtener pedidos por cliente", e);
+        return listaPedidos;
     }
-    return listaPedidos;
-}
 
     public boolean actualizarEstado(int pedidoId, String nuevoEstado, int responsableId) {
         String sql = "UPDATE pedidos SET estado_actual = ?, responsable_actual = ? WHERE id = ?";
@@ -365,5 +364,4 @@ public class PedidoDAO {
         return pedido;
     }
 
-    
 }

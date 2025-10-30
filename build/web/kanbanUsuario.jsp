@@ -382,58 +382,65 @@
             </div>
 
             <!-- LISTO ENTREGA -->
-            <div class="kanban-column">
-                <div class="column-header header-green">
-                    <div class="column-title">
-                        <span class="column-icon">📦</span>
-                        <span>Listo Entrega</span>
-                    </div>
-                    <span class="column-count"><%= pedidosListoEntrega.size()%></span>
+<div class="kanban-column">
+    <div class="column-header header-green">
+        <div class="column-title">
+            <span class="column-icon">📦</span>
+            <span>Listo Entrega</span>
+        </div>
+        <span class="column-count"><%= pedidosListoEntrega.size()%></span>
+    </div>
+    <div class="column-body">
+        <% if (!pedidosListoEntrega.isEmpty()) { %>
+            <% for (Pedido p : pedidosListoEntrega) {%>
+            <div class="kanban-card card-ready">
+                <div class="card-header">
+                    <span class="card-code"><%= p.getCodigoUnico()%></span>
+                    <span class="badge badge-success">✓ Listo</span>
                 </div>
-                <div class="column-body">
-                    <% if (!pedidosListoEntrega.isEmpty()) { %>
-                        <% for (Pedido p : pedidosListoEntrega) {%>
-                        <div class="kanban-card card-ready" onclick="verDetalle(<%= p.getId()%>)">
-                            <div class="card-header">
-                                <span class="card-code"><%= p.getCodigoUnico()%></span>
-                                <span class="badge badge-success">✓ Listo</span>
-                            </div>
-                            <div class="card-body">
-                                <div class="card-patient">
-                                    <strong>👤</strong> <%= p.getNombrePaciente()%>
-                                </div>
-                                <div class="card-work">
-                                    <strong>🦷</strong> <%= p.getTipoProtesis()%>
-                                </div>
-                                <div class="card-material">
-                                    <strong>💎</strong> <%= p.getMaterial()%>
-                                </div>
-                            </div>
-                            <div class="card-footer">
-                                <div class="card-date">
-                                    <strong>📅</strong> <%= p.getFechaCompromiso()%>
-                                </div>
-                            </div>
-                        </div>
-                        <% } %>
-                    <% } else { %>
-                        <div class="empty-state">
-                            <div class="empty-icon">📭</div>
-                            <p>Sin pedidos aquí</p>
-                        </div>
-                    <% }%>
+                <div class="card-body">
+                    <div class="card-patient">
+                        <strong>👤</strong> <%= p.getNombrePaciente()%>
+                    </div>
+                    <div class="card-work">
+                        <strong>🦷</strong> <%= p.getTipoProtesis()%>
+                    </div>
+                    <div class="card-material">
+                        <strong>💎</strong> <%= p.getMaterial()%>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="card-date">
+                        <strong>📅</strong> <%= p.getFechaCompromiso()%>
+                    </div>
+                </div>
+                <div class="card-actions">
+                    <button onclick="window.location.href='ver-pedido?id=<%= p.getId()%>'" 
+                            class="btn-card btn-card-primary">
+                        👁️ Ver Detalle
+                    </button>
+                    <button onclick="window.location.href='VerEstadoDelivery?id=<%= p.getId()%>'" 
+                            class="btn-card btn-card-delivery">
+                        🚚 Seguimiento
+                    </button>
                 </div>
             </div>
-
-        </div>
+            <% } %>
+        <% } else { %>
+            <div class="empty-state">
+                <div class="empty-icon">📭</div>
+                <p>Sin pedidos aquí</p>
+            </div>
+        <% }%>
     </div>
-</main>
-
+</div>
+    
 <footer class="footer">
     <div class="container">
         <p>&copy; 2025 LABDENT JLVEGA | Sistema de Gestión Dental</p>
     </div>
 </footer>
+
 
 <script>
     function verDetalle(idPedido) {

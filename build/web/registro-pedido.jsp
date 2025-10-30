@@ -30,6 +30,11 @@
                 <% if (usuario.isOdontologo()) { %>
                     <a href="misPedidos">Mis Pedidos</a>
                 <% } %>
+                <% if (usuario.isCliente()) { %>
+                <a href="PanelUsuario.jsp">Inicio</a>
+                    <a href="registro-pedido.jsp">Nuevo Pedido</a>
+                    <a href="kanbanUsuario.jsp">Kanban</a>
+                <% } %>
                 <a href="registro-pedido" class="active">Nuevo Pedido</a>
                 <div class="user-menu">
                     <span>👤 <%= usuario.getNombreCompleto() %></span>
