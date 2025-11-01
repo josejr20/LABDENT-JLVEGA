@@ -1,7 +1,9 @@
-use labdent_sistema;
+use labdent_sistema2;
 select * from usuarios;
 select * from transiciones_estado;
 select * from pedidos;
+select * from pedido_delivery;
+
 SHOW TABLES;
 SHOW CREATE TABLE pedidos;
 SELECT id, usuario_id, estado FROM pedidos;
@@ -23,3 +25,5 @@ SELECT
 FROM pedidos p
 LEFT JOIN usuarios u ON p.usuario_id = u.id
 WHERE u.email = 'dayana@gmail.com';
+select * from pedidos where usuario_id =7;
+DESC pedidos;

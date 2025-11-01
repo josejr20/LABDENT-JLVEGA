@@ -97,7 +97,7 @@ public class LoginServlet extends HttpServlet {
                 break;
             case "TECNICO":
             case "CERAMISTA":
-                response.sendRedirect("kanban");
+                response.sendRedirect("panelTecnico.jsp");
                 break;
             case "CLIENTE":
                 response.sendRedirect("PanelUsuario.jsp");

@@ -1,5 +1,5 @@
-CREATE DATABASE labdent_sistema;
-USE labdent_sistema;
+CREATE DATABASE labdent_sistema2;
+USE labdent_sistema2;
 select * from usuarios;
 select * from pedidos;
 select * from transiciones_estado;
