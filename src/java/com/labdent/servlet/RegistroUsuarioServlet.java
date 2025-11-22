@@ -24,6 +24,7 @@ public class RegistroUsuarioServlet extends HttpServlet {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
 
+        // Validaciones básicas
         if (nombre == null || telefono == null || email == null || password == null
                 || nombre.isBlank() || telefono.isBlank() || email.isBlank() || password.isBlank()) {
 
@@ -38,32 +39,45 @@ public class RegistroUsuarioServlet extends HttpServlet {
             return;
         }
 
+        if (password.length() < 6) {
+            request.setAttribute("error", "La contraseña debe tener al menos 6 caracteres.");
+            request.getRequestDispatcher("registroCliente.jsp").forward(request, response);
+            return;
+        }
+
         UsuarioDAO usuarioDAO = new UsuarioDAO();
 
-        // ✅ Verificar existencia de correo
-        if (usuarioDAO.autenticar(email, password) != null) {
+        // ✅ Verificar si el correo ya está registrado
+        if (usuarioDAO.existeEmail(email.trim())) {
             request.setAttribute("error", "El correo ya se encuentra registrado.");
             request.getRequestDispatcher("registroCliente.jsp").forward(request, response);
             return;
         }
 
+        // Crear nuevo usuario
         Usuario usuario = new Usuario();
         usuario.setNombreCompleto(nombre.trim());
         usuario.setTelefono(telefono.trim());
         usuario.setDireccion(direccion.trim());
-        usuario.setEmail(email.trim());
-        usuario.setPassword(password.trim());
+        usuario.setEmail(email.trim().toLowerCase());
+        usuario.setPassword(password); // ✅ Se encriptará en el DAO
         usuario.setRol("CLIENTE");
         usuario.setActivo(true);
 
         boolean registrado = usuarioDAO.registrar(usuario);
 
         if (registrado) {
-            request.setAttribute("success", "Cuenta creada exitosamente");
+            request.setAttribute("success", "Cuenta creada exitosamente. Ya puedes iniciar sesión.");
         } else {
             request.setAttribute("error", "No se pudo completar el registro. Intente nuevamente.");
         }
 
+        request.getRequestDispatcher("registroCliente.jsp").forward(request, response);
+    }
+    
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         request.getRequestDispatcher("registroCliente.jsp").forward(request, response);
     }
 }

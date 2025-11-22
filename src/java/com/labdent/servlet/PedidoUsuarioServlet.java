@@ -2,22 +2,24 @@ package com.labdent.servlet;
 
 import com.google.gson.Gson;
 import com.labdent.dao.PedidoDAO;
+import com.labdent.dao.UsuarioDAO;
 import com.labdent.model.Pedido;
+import com.labdent.model.Usuario;
+import com.labdent.util.JWTUtil;
+import com.labdent.util.XSSProtectionUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-
+import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Logger;
 
 @WebServlet("/pedido/listarPorUsuario")
 public class PedidoUsuarioServlet extends HttpServlet {
 
-    private static final long serialVersionUID = 1L;
-
+    private static final Logger LOGGER = Logger.getLogger(PedidoUsuarioServlet.class.getName());
     private final PedidoDAO pedidoDAO = new PedidoDAO();
+    private final UsuarioDAO usuarioDAO = new UsuarioDAO();
     private final Gson gson = new Gson();
 
     @Override
@@ -26,37 +28,69 @@ public class PedidoUsuarioServlet extends HttpServlet {
 
         response.setContentType("application/json;charset=UTF-8");
 
+        // ✅ 1. Validar sesión
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("usuario") == null) {
+            enviarError(response, HttpServletResponse.SC_UNAUTHORIZED, "Sesión no válida");
+            return;
+        }
+
+        // ✅ 2. Validar token JWT
+        String token = (String) session.getAttribute("token");
+        if (token == null || !JWTUtil.validarToken(token) || JWTUtil.isTokenExpirado(token)) {
+            session.invalidate();
+            enviarError(response, HttpServletResponse.SC_UNAUTHORIZED, "Token expirado");
+            return;
+        }
+
+        // ✅ 3. Obtener usuario de sesión
+        Usuario usuarioSesion = (Usuario) session.getAttribute("usuario");
+        
+        // ✅ 4. Validar token en BD
+        if (!usuarioDAO.validarTokenEnBD(usuarioSesion.getId(), token)) {
+            session.invalidate();
+            enviarError(response, HttpServletResponse.SC_UNAUTHORIZED, "Token no válido");
+            return;
+        }
+
+        // ✅ 5. Validar y sanitizar ID
         String idParam = request.getParameter("id");
-        if (!esIdValido(idParam)) {
+        if (!XSSProtectionUtil.isPositiveInteger(idParam)) {
             enviarError(response, HttpServletResponse.SC_BAD_REQUEST, "ID inválido");
             return;
         }
 
         int usuarioId = Integer.parseInt(idParam);
 
-        try {
-            System.out.println("📌 [DEBUG] Consultando pedidos del cliente ID → " + usuarioId);
+        // ✅ 6. CRITICAL: Validar que el usuario solo pueda ver SUS pedidos
+        // (excepto ADMIN que puede ver todos)
+        if (!usuarioSesion.isAdmin() && usuarioSesion.getId() != usuarioId) {
+            LOGGER.warning("⚠️ Intento de acceso no autorizado - Usuario " + 
+                          usuarioSesion.getId() + " intentó acceder a pedidos de " + usuarioId);
+            enviarError(response, HttpServletResponse.SC_FORBIDDEN, 
+                       "No tiene permisos para ver estos pedidos");
+            return;
+        }
 
+        try {
+            LOGGER.info("✅ Usuario " + usuarioSesion.getId() + " consultando pedidos de " + usuarioId);
+            
             List<Pedido> pedidos = pedidoDAO.obtenerPedidosPorCliente(usuarioId);
 
             if (pedidos == null || pedidos.isEmpty()) {
-                System.out.println("⚠ [DEBUG] No hay pedidos para este usuario");
+                LOGGER.info("📭 No hay pedidos para el usuario " + usuarioId);
             } else {
-                System.out.println("✅ [DEBUG] Pedidos encontrados: " + pedidos.size());
+                LOGGER.info("📦 Pedidos encontrados: " + pedidos.size());
             }
 
             respuestaJsonExitosa(response, pedidos);
 
         } catch (Exception ex) {
-            System.err.println("❌ ERROR en PedidoUsuarioServlet: " + ex.getMessage());
+            LOGGER.severe("❌ ERROR: " + ex.getMessage());
             ex.printStackTrace();
             enviarError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-                    "Error al obtener pedidos del cliente");
+                    "Error al obtener pedidos");
         }
-    }
-
-    private boolean esIdValido(String id) {
-        return id != null && id.matches("\\d+");
     }
 
     private void respuestaJsonExitosa(HttpServletResponse response, List<Pedido> pedidos)

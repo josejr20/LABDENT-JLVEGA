@@ -14,6 +14,8 @@ public class Usuario implements Serializable {
     private boolean activo;
     private Timestamp fechaRegistro;
     private Timestamp ultimaConexion;
+    private String tokenJwt;
+    private Timestamp tokenExpiracion;
 
     // Constructores
     public Usuario() {}
@@ -56,6 +58,12 @@ public class Usuario implements Serializable {
 
     public Timestamp getUltimaConexion() { return ultimaConexion; }
     public void setUltimaConexion(Timestamp ultimaConexion) { this.ultimaConexion = ultimaConexion; }
+
+    public String getTokenJwt() { return tokenJwt; }
+    public void setTokenJwt(String tokenJwt) { this.tokenJwt = tokenJwt; }
+
+    public Timestamp getTokenExpiracion() { return tokenExpiracion; }
+    public void setTokenExpiracion(Timestamp tokenExpiracion) { this.tokenExpiracion = tokenExpiracion; }
 
     // Métodos auxiliares
     public boolean isOdontologo() { return "ODONTOLOGO".equals(rol); }
